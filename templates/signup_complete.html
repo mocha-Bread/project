@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+    <title>회원가입 완료</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #55c5c1;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #777;
+        }
+
+        a {
+            display: inline-block;
+            background-color: #55c5c1;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #4aa5a1;
+        }
+    </style>
+</head>
+<body>
+    <form method="post" action="/signup_complete"></form>
+    <h1>회원가입이 완료되었습니다!</h1>
+    <p>로그인 페이지로 돌아가 로그인하시기 바랍니다.</p>
+    <a href="{{ url_for('login') }}">로그인으로 돌아가기</a>
+</body>
+</html>

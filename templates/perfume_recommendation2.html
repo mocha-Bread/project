@@ -1,0 +1,231 @@
+<html><head>
+    <title>향수 추천 결과</title>
+    
+    <script>
+        function showFeedbackForm() {
+            window.location.href = "feedback.html";
+            
+        }
+
+        function hideFeedbackForm() {
+            var feedbackModal = document.getElementById("feedback-modal");
+            feedbackModal.style.display = "none";
+        }
+
+        function preventFeedbackClose(event) {
+            event.stopPropagation();
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #008080;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        li:last-child {
+            margin-bottom: 0;
+        }
+
+        li:hover {
+            transform: scale(1.02);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .feedback-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #008080;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .feedback-button:hover {
+            background-color: #006666;
+            .feedback-form {
+            /* 기존 스타일 (생략) */
+            transform: translate(-50%, -50%);
+        }
+    }
+
+        /* 피드백 폼의 제목 스타일 */
+        .feedback-form h2 {
+            text-align: center;
+            color: #008080;
+        }
+
+        /* 피드백 폼 내부 요소들 스타일 */
+        .feedback-form label, .feedback-form textarea, .feedback-form input[type="submit"], .feedback-form a {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        /* 피드백 제출 버튼 스타일 */
+        .feedback-form input[type="submit"] {
+            background-color: #008080;
+            border: none;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* 피드백 제출 버튼 호버 스타일 */
+        .feedback-form input[type="submit"]:hover {
+            background-color: #006666;
+        }
+
+        /* 피드백 닫기 버튼 스타일 */
+        .feedback-form a {
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* 피드백 창을 불투명하게 배경화면으로 덮는 스타일 */
+        .feedback-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.5); /* 흰색 배경 with 약간의 투명도 */
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 피드백 창이 보일 때 피드백 모달 스타일 */
+        .feedback-modal.show {
+            display: flex;
+        }
+
+        /* 피드백 폼 스타일 */
+        .feedback-form {
+            max-width: 800px;
+            
+            padding-top: 100px;
+            padding-bottom: 150px;
+            padding-left: 500px;
+            padding-right: 500px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .feedback-form label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .feedback-form input[type="text"],
+        .feedback-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .feedback-form textarea {
+            resize: vertical;
+        }
+
+        .feedback-form input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #008080;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .feedback-form input[type="submit"]:hover {
+            background-color: #006666;
+        }
+
+        .feedback-form a {
+            display: block;
+            text-align: center;
+            color: #008080;
+            text-decoration: none;
+        }
+
+        .feedback-form a:hover {
+            text-decoration: underline;
+        }.view-recommendations-button {
+        background-color: #008080;
+        color: #fff;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        margin: 20px auto;
+        max-width: 200px;
+    }
+
+    .view-recommendations-button:hover {
+        background-color: #006666;
+    }
+    </style>
+</head>
+<body>
+    <h1>향수 추천 결과</h1>
+  
+    
+    <ul>
+        {% for perfume, reason, effect in perfumes %}
+            <li>
+                추천 향기: {{ perfume }} (이유: {{ reason }})
+                <br>
+                추천 향의 효능: {{ effect }}
+                <a href="{{ url_for('recommendations', perfume=perfume) }}" class="view-recommendations-button">{{ perfume }}향수 보러가기</a>
+            </li>
+        {% endfor %}
+    </ul>
+    
+    
+
+    
+
+
+
+
+
+</body></html>

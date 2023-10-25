@@ -1,0 +1,353 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>로그인 및 회원가입</title>
+    <style>
+        body {
+            font-size: 18px;
+            margin: 0;
+            color: #6a6f8c;
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+        body {
+            overflow: hidden;
+        }
+        body {
+            touch-action: none;
+            -ms-touch-action: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        /* 로그인 페이지 최대 너비 및 높이 설정 */
+        .login-wrap {
+            width: 100%;
+            margin: auto;
+            max-width: 1050px;
+            min-height: 100vh;
+            position: relative;
+            background: url(https://image.ohou.se/i/bucketplace-v2-development/uploads/cards/advices/167151590798195122.jpg?gif=1&w=1080) no-repeat center;
+            background-size: cover;
+            box-shadow: 0 12px 15px 0 rgba(0, 0, 0, .24), 0 17px 50px 0 rgba(0, 0, 0, .19);
+        }
+        .login-html {
+            width: 50%;
+            height: 90%;
+            position: absolute;
+            padding: 50px 20px;
+            background: rgba(216, 192, 156, 0.9);
+        }
+        /* ... 기타 스타일 유지 ... */
+        /* 추가: 제품 이름 스타일 */
+        .product-name {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #000;
+            font-size: 2rem;
+        }.login-html .sign-in-htm,
+        .login-html .sign-up-htm{
+            
+            left:0;
+            right:0;
+            bottom:0;
+            position:absolute;
+            transform:rotateY(180deg) translateY(20%);
+            backface-visibility:hidden;
+            transition:all .4s linear;
+            margin-top: 700px;
+            
+        }
+        
+            
+
+        .login-html .sign-in,
+        .login-html .sign-up,
+        .login-form .group .check{
+            display:none;
+           
+            
+        }
+        .login-html .tab,
+        .login-form .group .label,
+        .login-form .group .button{
+            text-transform:uppercase;
+            
+        }
+        .login-html .tab{
+            
+            font-size:22px;
+            margin-right:15px;
+            padding-bottom:5px;
+            margin:0 15px 10px 0;
+            display:inline-block;
+            border-bottom:2px solid transparent;
+        }
+        .login-html .sign-in:checked + .tab,
+        .login-html .sign-up:checked + .tab{
+            color:#fff;
+            border-color:#1161ee;
+            margin-top: 200px;
+            
+        }
+        .login-form{
+            min-height:345px;
+            position:relative;
+            perspective:1000px;
+            transform-style:preserve-3d;
+        }
+        .login-form .group{
+            margin-bottom:15px;
+            display: flex; /* 추가: 아이템들을 가로로 정렬 */
+            flex-direction: row; /* 추가: 아이템들을 가로로 정렬 */
+        }
+        .login-form .group .label,
+        .login-form .group .input,
+        .login-form .group .button{
+            width:100%;
+            color:#fff;
+            display:block;
+            
+        }
+        .login-form .group .input,
+        .login-form .group .button{
+            border:none;
+            padding:15px 20px;
+            border-radius:25px;
+            background:rgba(255,255,255,.1);
+            
+            
+        }
+        .login-form .group input[data-type="password"]{
+            text-security:circle;
+            -webkit-text-security:circle;
+        }
+        .login-form .group .label{
+            color:#aaa;
+            font-size:12px;
+        }
+        .login-form .group .button{
+            background:#1161ee;
+        }
+        .login-form .group label .icon{
+            width:15px;
+            height:15px;
+            border-radius:2px;
+            position:relative;
+            display:inline-block;
+            background:rgba(255,255,255,.1);
+            
+        }
+        .login-form .group label .icon:before,
+        .login-form .group label .icon:after{
+            content:'';
+            width:10px;
+            height:2px;
+            background:#fff;
+            position:absolute;
+            transition:all .2s ease-in-out 0s;
+        }
+        .login-form .group label .icon:before{
+            left:3px;
+            width:5px;
+            bottom:6px;
+            transform:scale(0) rotate(0);
+        }
+        .login-form .group label .icon:after{
+            top:6px;
+            right:0;
+            transform:scale(0) rotate(0);
+        }
+        .login-form .group .check:checked + label{
+            color:#fff;
+        }
+        .login-form .group .check:checked + label .icon{
+            background:#1161ee;
+            margin-top: 10px;
+        }
+        .login-form .group .check:checked + label .icon:before{
+            transform:scale(1) rotate(45deg);
+        }
+        .login-form .group .check:checked + label .icon:after{
+            transform:scale(1) rotate(-45deg);
+        }
+        .login-html .sign-in:checked + .tab + .sign-up + .tab + .login-form .sign-in-htm{
+            transform:rotate(0);
+        }
+        .login-html .sign-up:checked + .tab + .login-form .sign-up-htm{
+            transform:rotate(0);
+            
+        }
+        
+        .login-form h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        .login-form form {
+            text-align: center;
+        }
+        .login-form .group {
+            margin-bottom: 10px;
+           
+            
+        }
+        .login-form .group label {
+            display: block;
+            font-size: 18px;
+            margin-right: 0px; /* 여백을 추가하여 아이콘과 라벨 사이의 간격을 늘립니다. */
+            color: #fff;
+        }
+        .login-form .group input[type="text"],
+        .login-form .group input[type="password"],
+        .login-form .group input[type="date"] {
+            flex: 1; /* 아이템들이 가로로 정렬되도록 flex 속성 추가 */
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            
+        }
+        .login-form .group input[type="submit"] {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            background: #1161ee;
+            color: #fff;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .login-html .sign-up:checked + .tab + .login-form .sign-up-htm {
+        transform: rotateY(0deg) translateY(35%);
+        }       
+        .login-form .hr {
+            height: 2px;
+            margin: 30px 0;
+            background: rgba(255, 255, 255, 0.2);
+            margin-top: 10px;
+        }
+        .login-form .foot-lnk {
+            text-align: center;
+            color: #fff;
+        }
+        .group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .group label {
+            margin-right: 10px;
+        }
+        /* 추가: 제품 이름 스타일 */
+        .product-name {
+            position: absolute;
+            bottom: 17cm;
+            left: 143%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: black;
+            font-size: 55px;
+            margin-top: 100px;
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrap">
+        <div class="login-html">
+            <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">로그인</label>
+            <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">회원가입</label>
+            <div class="login-form">
+                <div class="sign-in-htm">
+                    <form method="post" action="/login"> <!-- 폼 태그를 이곳으로 이동 -->
+                        <div class="group">
+                            <label for="id">아이디:</label>
+                            <input type="text" id="id" name="id" required>
+                        </div>
+                        <div class="group">
+                            <label for="pass_word">비밀번호:</label>
+                            <input type="password" id="pass_word" name="pass_word" required>
+                        </div>
+                        <div class="group">
+                            <input type="submit" class="button" value="로그인">
+                        </div>
+                        <div class="hr"></div>
+                        <div class="foot-lnk">
+                            <div class="foot-lnk">
+                                {% if error_message %}
+                                <p style="color: red;">{{ error_message }}</p>
+                                {% endif %}
+                            </div>
+                            
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="sign-up-htm">
+                    <h1>회원가입</h1>
+                    <form method="post" action="/signup">
+                        <div class="group">
+                            <label for="user_id">아이디:</label>
+                            <input type="text" name="user_id" id="user_id" required>
+                        </div>
+                        <div class="group">
+                            <label for="user_pw">비밀번호:</label>
+                            <input type="password" name="user_pw" id="user_pw" required>
+                        </div>
+                        <div class="group">
+                            <label for="confirm_pass_word">비밀번호 확인:</label>
+                            <input type="password" name="confirm_pass_word" id="confirm_pass_word" required>
+                        </div>
+                        <div class="group">
+                            <label>성별:</label>
+                            <input type="radio" name="user_gender" value="F" id="female" required>
+                            <label for="female">여성</label>
+                            <input type="radio" name="user_gender" value="M" id="male" required>
+                            <label for="male">남성</label>
+                        </div>
+                        <div class="group">
+                            <label for="user_birthday">연령대:</label>
+                            <input type="date" name="user_birthday" id="user_birthday" required>
+                        </div>
+                        <div class="group">
+                            <label for="user_name">이름:</label>
+                            <input type="text" name="user_name" id="user_name" required>
+                        </div>
+                        
+                        <div class="group">
+                                <label for="user_tel">전화번호:</label>
+                                <input type="text" name="user_tel" id="user_tel" required>
+                        </div>
+                        
+                        <div class="group">
+                            <input type="submit" name="signup" value="회원가입" class="button">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- 추가: 제품 이름 -->
+            <div class="product-name">
+                PickMyPerfume
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

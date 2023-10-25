@@ -1,0 +1,58 @@
+<html lang="ko"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문서</title>
+    <style>
+        body {
+            background-color: #f2f2f2;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            margin-top: 300px;
+        }
+        .message {
+            background-color: #ffffff;
+            border-radius: 5px;
+            padding: 40px;
+            font-size: 20px;
+            text-align: center;
+            color: #008080;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .feedback-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #008080;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .feedback-button:hover {
+            background-color: #006666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1></h1>
+        <div class="message" id="message">
+            근처 올리브영에서 추천향을 시향해보세요.<br>유저코드는{{user_code}} 입니다
+        </div>
+        <form method="post" action="/feedback">
+            <button type="submit" class="feedback-button">피드백</button>
+        </form>
+    </div>
+
+</body></html>

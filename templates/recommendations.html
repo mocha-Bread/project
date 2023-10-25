@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 추가한 CSS 스타일 -->
+    <style>
+        body {
+            background-color: #f2f2f2;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #008080;
+            text-align: center;
+        }
+        .slideshow-container {
+            display: flex;
+            justify-content: center; /* 가운데 정렬 */
+            max-width: 500px; /* 최대 가로 크기 */
+            margin: 0 auto; /* 가운데 정렬 */
+        }
+        .slide {
+            display: none;
+            margin-top: 350px;
+        }
+        .slide img {
+            max-width: 250px; /* 최대 가로 크기 */
+            max-height: 250px; /* 최대 세로 크기 */
+            margin: 0 auto; /* 가운데 정렬 */
+            
+        }
+        .dot-container {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .dot {
+            height: 10px;
+            width: 10px;
+            margin: 0 4px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+        .dot.active {
+            background-color: #00a6e0;
+        }button {
+            outline: none; /* 버튼 윤곽 없애기 */
+        }.message {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #008080;
+        }
+        
+        
+    </style>
+</head>
+<body onload="showSlides()">
+    <h1>당신만을 위한 향수 추천</h1>
+    <div class="slideshow-container">
+        {% for item in result %}
+            <div class="slide">
+                <input type="checkbox" name="selected_perfumes" value="{{ item.perf_idx }}" onclick="handlePerfumeClick(event)">
+                <img src="{{ item.perf_img }}" alt="해당향수 이미지가 없습니다">
+                <p>{{ item.perf_info }}</p>
+                <p>{{ item.perf_name }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="dot-container">
+        {% for _ in result %}
+            <span class="dot"></span>
+        {% endfor %}
+    </div>
+    <form method="post" action="/submit" id="perfume-form" style="display: none;">
+        <input type="hidden" name="selected_perfumes" id="selected-perfumes-input">
+    </form>
+    <button class="submit-button" onclick="submitForm()">제출</button>
+
+    <style>
+        .submit-button {
+            background-color: #008080;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin: 20px auto;
+            max-width: 200px;
+        }
+    </style>
+
+<script>
+    var selectedPerfumes = [];
+    var slideIndex = 0;
+    var slides = document.getElementsByClassName("slide");
+    var dots = document.getElementsByClassName("dot");
+
+    function showSlides() {
+        for (var i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        for (var i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+        }
+
+        slideIndex++;
+        if (slideIndex > slides.length) {
+            slideIndex = 1;
+        }
+
+        slides[slideIndex - 1].style.display = "block";
+        dots[slideIndex - 1].className += " active";
+
+        setTimeout(showSlides, 5000);
+    }
+
+    function handlePerfumeClick(event) {
+        var checkbox = event.target;
+        var perfumeIdx = checkbox.value;
+
+        if (checkbox.checked) {
+            if (selectedPerfumes.length < 2) {
+                selectedPerfumes.push(perfumeIdx);
+            } else {
+                checkbox.checked = false;
+                alert("최대 2개의 향수만 선택할 수 있습니다.");
+            }
+        } else {
+            var index = selectedPerfumes.indexOf(perfumeIdx);
+            if (index > -1) {
+                selectedPerfumes.splice(index, 1);
+            }
+        }
+
+        updateSubmitButton();
+    }
+
+    function updateSubmitButton() {
+        var submitButton = document.getElementsByClassName("submit-button")[0];
+        var selectedPerfumesInput = document.getElementById("selected-perfumes-input");
+
+        if (selectedPerfumes.length > 0) {
+            selectedPerfumesInput.value = selectedPerfumes.join(",");
+            submitButton.style.display = "block";
+        } else {
+            submitButton.style.display = "none";
+        }
+    }
+
+    function submitForm() {
+        document.getElementById("perfume-form").submit();
+        var userCode = "{{ user_code }}"; // user_code 값을 가져옴
+        document.getElementById("user-code").textContent = userCode; // user-code 요소에 user_code 값을 설정
+        
+    }
+
+    // 페이지 로드 시 선택된 향수를 복원하는 함수
+    function restoreSelectedPerfumes() {
+        var checkboxes = document.getElementsByName("selected_perfumes");
+        var selectedPerfumesInput = document.getElementById("selected-perfumes-input");
+        var selectedPerfumesValue = selectedPerfumesInput.value;
+
+        if (selectedPerfumesValue) {
+            selectedPerfumes = selectedPerfumesValue.split(",");
+            for (var i = 0; i < checkboxes.length; i++) {
+                var perfumeIdx = checkboxes[i].value;
+                if (selectedPerfumes.includes(perfumeIdx)) {
+                    checkboxes[i].checked = true;
+                }
+            }
+        }
+
+        updateSubmitButton();
+    }
+
+    // 페이지 로드 시 선택된 향수 복원 함수 호출
+    restoreSelectedPerfumes();
+</script>
+    </body>
+</html> 
