@@ -109,7 +109,7 @@ def get_database_connection():
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # 세션 사용을 위한 시크릿 키 설정
-openai.api_key = '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'
+openai.api_key = 'your_secret_key_here'
 
 def generate_perfume(description):
     prompt = f"\n기분: {description['mood']}\n성별: {description['gender']}\n나이: {description['age']}\n선호하는 향의 종류: {description['preference']}\n지금까지 사용한 적 있는 향수 중에서 가장 마음에 드는 향수: {description['favorite']}\n선호하지않는 향기: {description['avoid']}\n향수 사용 목적: {description['purpose']}\n선호하는 향기의 강도: {description['intensity']}\n향수 사용 계절: {description['season']}\n향수의 향기:"
