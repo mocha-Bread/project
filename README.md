@@ -16,4 +16,6 @@
 <H3>주의사항</H3>
 
 > s3스토리지 사용으로 이미지가 손실될 가능성이 높아 sql문에 s3 주소를 로컬주소 혹은 s3에 직접 올려서 객체주소로 변경해야함
-> ex) https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9838.jpg 이런주소를 변경해야할수도 있음
+> 
+> ex) https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9838.jpg
+> 이런주소를 변경해야할수도 있음
