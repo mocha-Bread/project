@@ -1,0 +1,473 @@
+-- 테이블 순서는 관계를 고려하여 한 번에 실행해도 에러가 발생하지 않게 정렬되었습니다
+-- tb_distributor Table Create SQL
+-- 테이블 생성 SQL - tb_distributor
+CREATE TABLE tb_distributor
+(
+    `d_idx`    INT             NOT NULL    AUTO_INCREMENT COMMENT '매장 순번', 
+    `d_name`   VARCHAR(45)     NOT NULL    COMMENT '매장명', 
+    `d_tel`    VARCHAR(20)     NOT NULL    COMMENT '매장 전화번호', 
+    `d_addr`   VARCHAR(800)    NOT NULL    COMMENT '매장 주소', 
+    `d_owner`  VARCHAR(30)     NOT NULL    COMMENT '대표자', 
+     PRIMARY KEY (d_idx)
+);
+
+
+-- 테이블 Comment 설정 SQL - tb_distributor
+ALTER TABLE tb_distributor COMMENT '판매매장';
+
+
+-- tb_user Table Create SQL
+-- 테이블 생성 SQL - tb_user
+CREATE TABLE tb_user
+(
+    `user_id`        VARCHAR(30)    NOT NULL    COMMENT '회원 아이디', 
+    `user_pw`        VARCHAR(30)    NOT NULL    COMMENT '회원 비밀번호', 
+    `user_name`      VARCHAR(30)    NOT NULL    COMMENT '회원 이름', 
+    `user_birthday`  DATE           NOT NULL    COMMENT '회원 생년월일', 
+    `user_gender`    CHAR(1)        NOT NULL    COMMENT '회원 성별', 
+    `user_tel`       VARCHAR(20)    NOT NULL    COMMENT '회원 전화번호', 
+     PRIMARY KEY (user_id)
+);
+
+-- 테이블 Comment 설정 SQL - tb_user
+ALTER TABLE tb_user COMMENT '회원';
+
+
+-- tb_perfume Table Create SQL
+-- 테이블 생성 SQL - tb_perfume
+CREATE TABLE tb_perfume
+(
+    `perf_idx`          INT             NOT NULL    AUTO_INCREMENT COMMENT '향수 고유번호', 
+    `perf_name`         VARCHAR(100)    NOT NULL    COMMENT '향수 이름', 
+    `perf_cnt`          INT             NOT NULL    COMMENT '향수 수량', 
+    `perf_price`        INT             NOT NULL    COMMENT '향수 가격', 
+    `perf_affiliation`  VARCHAR(30)     NOT NULL    COMMENT '향수 계열', 
+    `perf_info`         TEXT            NOT NULL    COMMENT '향수 설명', 
+    `perf_img`          VARCHAR(600)    NULL        COMMENT '향수 사진', 
+     PRIMARY KEY (perf_idx)
+);
+
+-- 테이블 Comment 설정 SQL - tb_perfume
+ALTER TABLE tb_perfume COMMENT '향수정보';
+
+
+-- tb_feedback Table Create SQL
+-- 테이블 생성 SQL - tb_feedback
+CREATE TABLE tb_feedback
+(
+    `feedback_idx`    INT             NOT NULL    AUTO_INCREMENT COMMENT '피드백 고유번호', 
+    `title`           VARCHAR(600)    NOT NULL    COMMENT '제목', 
+    `content`         TEXT            NOT NULL    COMMENT '내용', 
+    `created_at`      DATETIME        NOT NULL    COMMENT '날짜', 
+    `user_id`         VARCHAR(30)     NOT NULL    COMMENT '회원 아이디', 
+    `perf_photo`      VARCHAR(600)    NULL        COMMENT '향수 사진', 
+    `feedback_views`  INT             NOT NULL    COMMENT '조회수', 
+    `feedback_likes`  INT             NOT NULL    COMMENT '좋아요수', 
+    `perf_idx`        INT             NOT NULL    COMMENT '향수 고유번호', 
+     PRIMARY KEY (feedback_idx)
+);
+
+-- 테이블 Comment 설정 SQL - tb_feedback
+ALTER TABLE tb_feedback COMMENT '고객피드백';
+
+-- Foreign Key 설정 SQL - tb_feedback(user_id) -> tb_user(user_id)
+ALTER TABLE tb_feedback
+    ADD CONSTRAINT FK_tb_feedback_user_id_tb_user_user_id FOREIGN KEY (user_id)
+        REFERENCES tb_user (user_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - tb_feedback(user_id)
+-- ALTER TABLE tb_feedback
+-- DROP FOREIGN KEY FK_tb_feedback_user_id_tb_user_user_id;
+
+-- Foreign Key 설정 SQL - tb_feedback(perf_idx) -> tb_perfume(perf_idx)
+ALTER TABLE tb_feedback
+    ADD CONSTRAINT FK_tb_feedback_perf_idx_tb_perfume_perf_idx FOREIGN KEY (perf_idx)
+        REFERENCES tb_perfume (perf_idx) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - tb_feedback(perf_idx)
+-- ALTER TABLE tb_feedback
+-- DROP FOREIGN KEY FK_tb_feedback_perf_idx_tb_perfume_perf_idx;
+
+
+-- tb_manager Table Create SQL
+-- 테이블 생성 SQL - tb_manager
+CREATE TABLE tb_manager
+(
+    `mgr_idx`   INT            NOT NULL    AUTO_INCREMENT COMMENT '매니저 고유번호', 
+    `mgr_name`  VARCHAR(45)    NOT NULL    COMMENT '매니저명', 
+    `d_idx`     INT            NOT NULL    COMMENT '매장 순번', 
+    `mgr_tel`   VARCHAR(20)    NOT NULL    COMMENT '매니저 전화번호', 
+     PRIMARY KEY (mgr_idx)
+);
+
+
+-- 테이블 Comment 설정 SQL - tb_manager
+ALTER TABLE tb_manager COMMENT '매니저';
+
+-- Foreign Key 설정 SQL - tb_manager(d_idx) -> tb_distributor(d_idx)
+ALTER TABLE tb_manager
+    ADD CONSTRAINT FK_tb_manager_d_idx_tb_distributor_d_idx FOREIGN KEY (d_idx)
+        REFERENCES tb_distributor (d_idx) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - tb_manager(d_idx)
+-- ALTER TABLE tb_manager
+-- DROP FOREIGN KEY FK_tb_manager_d_idx_tb_distributor_d_idx;
+
+
+-- tb_reco_perfume Table Create SQL
+-- 테이블 생성 SQL - tb_reco_perfume
+CREATE TABLE tb_reco_perfume
+(
+    `user_code`    INT            NOT NULL    AUTO_INCREMENT COMMENT '회원 고유번호', 
+    `user_id`     VARCHAR(30)    NOT NULL    COMMENT '회원 아이디', 
+    `perf_idx1`    INT            NOT NULL    COMMENT '향수 1', 
+    `perf_idx2`  INT       NOT NULL    COMMENT '향수 2', 
+     PRIMARY KEY (user_code)
+);
+
+
+-- 테이블 Comment 설정 SQL - tb_reco_perfume
+ALTER TABLE tb_reco_perfume COMMENT '시향 정보';
+
+-- Foreign Key 설정 SQL - tb_reco_perfume(user_id) -> tb_user(user_id)
+ALTER TABLE tb_reco_perfume
+    ADD CONSTRAINT FK_tb_reco_perfume_user_id_tb_user_user_id FOREIGN KEY (user_id)
+        REFERENCES tb_user (user_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - tb_reco_perfume(user_id)
+-- ALTER TABLE tb_reco_perfume
+-- DROP FOREIGN KEY FK_tb_reco_perfume_user_id_tb_user_user_id;
+
+-- Foreign Key 설정 SQL - tb_reco_perfume(perf_idx) -> tb_perfume(perf_idx)
+ALTER TABLE tb_reco_perfume
+    ADD CONSTRAINT FK_tb_reco_perfume_perf_idx_tb_perfume_perf_idx FOREIGN KEY (perf_idx1)
+        REFERENCES tb_perfume (perf_idx) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - tb_reco_perfume(perf_idx)
+-- ALTER TABLE tb_reco_perfume
+-- DROP FOREIGN KEY FK_tb_reco_perfume_perf_idx_tb_perfume_perf_idx;
+
+
+-- tb_goods Table Create SQL
+-- 테이블 생성 SQL - tb_goods
+CREATE TABLE tb_goods
+(
+    `goods_idx`  INT             NOT NULL    AUTO_INCREMENT COMMENT '상품 순번', 
+    `perf_idx`   INT             NOT NULL    COMMENT '향수 고유번호', 
+    `d_idx`      INT             NOT NULL    COMMENT '매장 순번', 
+    `goods_img`  VARCHAR(600)    NULL        COMMENT '향수 사진', 
+     PRIMARY KEY (goods_idx)
+);
+
+
+-- 테이블 Comment 설정 SQL - tb_goods
+ALTER TABLE tb_goods COMMENT '보유상품(향수)';
+
+-- Foreign Key 설정 SQL - tb_goods(d_idx) -> tb_distributor(d_idx)
+ALTER TABLE tb_goods
+    ADD CONSTRAINT FK_tb_goods_d_idx_tb_distributor_d_idx FOREIGN KEY (d_idx)
+        REFERENCES tb_distributor (d_idx) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - tb_goods(d_idx)
+-- ALTER TABLE tb_goods
+-- DROP FOREIGN KEY FK_tb_goods_d_idx_tb_distributor_d_idx;
+
+-- Foreign Key 설정 SQL - tb_goods(perf_idx) -> tb_perfume(perf_idx)
+ALTER TABLE tb_goods
+    ADD CONSTRAINT FK_tb_goods_perf_idx_tb_perfume_perf_idx FOREIGN KEY (perf_idx)
+        REFERENCES tb_perfume (perf_idx) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - tb_goods(perf_idx)
+-- ALTER TABLE tb_goods
+-- DROP FOREIGN KEY FK_tb_goods_perf_idx_tb_perfume_perf_idx;
+
+CREATE TABLE tb_perfume_state
+(
+    `perf_loc`      INT        NOT NULL    AUTO_INCREMENT COMMENT  '위치 순번', 
+    `perf_idx`     INT                    COMMENT  '향수 고유번호', 
+    `perf_state`    INT        NOT NULL    COMMENT  '향수 상태', 
+    `d_idx`        INT         NOT NULL    COMMENT  '매장 순번', 
+     PRIMARY KEY (perf_loc)
+);
+
+-- 테이블 Comment 설정 SQL - tb_perfume_state
+ALTER TABLE tb_perfume_state COMMENT '향수상태저장';
+
+-- Foreign Key 설정 SQL - tb_perfume_state(perf_idx) -> tb_perfume(perf_idx)
+ALTER TABLE tb_perfume_state
+    ADD CONSTRAINT fk_perfume_state FOREIGN KEY (perf_idx)
+        REFERENCES tb_perfume (perf_idx) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - tb_manager(d_idx)
+-- ALTER TABLE tb_perfume_state
+-- DROP FOREIGN KEY fk_perfume_state;
+
+
+
+-- 향수정보 입력
+-- 향수이름, 향수수량, 향수가격, 향수계열, 향수설명, 향수사진
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('34번가 생제르망', 10, 191000, '우디계열', '스파이시한 꽃향과 크리미한 우드향이 매력적인 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%981.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('가브리', 15, 179000, '플로럴계열', '포근하면서 가벼운 화이트 플로럴 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%982.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('공원에서의 대화', 5, 190000, '플로럴계열', '공원에 앉아 청초한 꽃들의 맑은 향기를 들이마시는 느낌', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%983.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('굿 걸 곤 배드', 4, 289000, '프루티계열', '오스만투스와 복숭아가 서로 밀당하듯 존재감을 드러내는 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%984.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('그레이 베티버', 13, 175000, '우디계열', '사계절이 모두 어울리는 단향 빠진 상큼한 베티버');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('끌로', 1, 169000, '로즈계열', '화이트 로즈와 프리지아의 우아하면서 청순한 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('넘버05', 3, 126000, '알데하이드계열', '짙은 파우더리의 고전적 관능미가 느껴지는 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%985.jpg.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('넘버05 로', 23, 179000, '플로럴계열', '런더리한 향기로 시작해 핸드크림을 바른 듯 부드러운 플로럴 향기로 마무리되는 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%986.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('네롤리 포르토피노', 14, 280000, '시트러스계열', '시원한 해변에서 까먹는 레몬과 오렌지', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%987.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('네롤리 36', 5, 350000, '플로럴-비누계열', '캐쥬얼이 어울리는 상큼 개운한 화이트 플로럴 빨래 비누향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('넥타린 블로썸 앤 허니', 100, 159000, '프루티-구르망계열', '아카시아 꿀 향기에 취해버린 자두', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%988.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('뉘 드 셀로판', 45, 130000, '플로럴계열', '여리여리한 금목서가 가득한 꽃집향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%989.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('느와 드 느와', 10, 258000, '로즈계열', '어둡고 퇴폐적인 다크 로즈');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('다크 앰버 앤 진저 릴리', 54, 218000, '우디계열', '원목 책상 앞에 앉아 연필로 꼭꼭 눌러 쓴 편지 같은 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9810.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('더티', 150, 55000, '허브계열', '강렬한 스피어민트 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('도 손', 4, 255000, '비누계열', '깔끔하고 깨끗한 튜베로즈 비누향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9811.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('떼누아 29', 7, 245000, '프루티-구르망계열', '꿀에 절인 뜨거운 홍차의 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9812.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('떼르 데르메스', 30, 110000, '프루티계열', '차가운 느낌의 오렌지와 베티버, 송진 잔향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('라튤립', 77, 137000, '플로럴계열', '햇빛 쨍쨍한 날 꽃집에서 나는 꽃들의 따스한 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9814.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('라임 바질 앤 만다린', 50, 145000, '프루티계열', '싱그러운 라임과 톡 쏘는 바질의 산뜻하고 상쾌한 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9813.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('러브 인 화이트', 13, 210000, '플로럴계열', '꽃향기를 마시며 츄파춥스를 먹는 것 같은 사랑스러운 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9815.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('레드 로즈', 130, 87000, '로즈계열', '스트레이트한 순정 장미향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('레이지 선데이 모닝', 60, 98000, '우디계열', '하얀 이불 위에서 맞이하는 이른 아침의 시원한 바람', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9816.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('레인', 6, 195000, '그린계열', '비에 젖은 창밖의 촉촉한 잔디를 바라보며 시티팝을 듣는 느낌', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9817.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('레저렉션', 2, 139000, '허브계열', '여름에 어울리는 톡톡 튀는 상큼한 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('로디베', 4, 270000, '머스크계열', '아이리스와 머스크가 만들어낸 매력적이고 우아한 겨울의 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9818.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('로사 가데니아', 8, 195000, '비누계열', '장미우유 푸딩같은 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9819.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('로스트 체리', 7, 396200, '프루티계열', '올드패션드를 흠뻑 머금은 칵테일 체리');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('로얄 워터', 2, 245000, '비누계열', '레몬과 풀잎으로 만든 것 같은 비누향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('로즈 오브 노 맨즈 랜드', 3, 218000, '로즈계열', '흙냄새 없는 세련되고 시크한 중성적 장미향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('로즈 폼퐁', 9, 178500, '프로티-로즈계열', '발랄하고 상큼한 복숭아에이드에 장미향을 섞은 듯 한 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('로즈 프릭', 9, 305000, '로즈계열', '패츌리가 가미된 장미향과 붉은 노을의 따스함이 전해지는 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('로즈', 10, 82900, '우디-로즈계열', '장미꽃 보다는 장미나무에서 날 것 같은 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('로즈 31', 9, 265000, '로즈계열', '로즈향에 커민, 앰버우드가 더해져 중성적인 매력이 느껴지는 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('롬브로 단 로', 8, 215800, '로즈-우디계열', '생장미 줄기를 갈아 넣은 듯한 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9820.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('리브르', 1, 189000, '플로럴-머스크계열', '성숙한 라벤더 플로럴과 머스크의 여운. 트렌치코트 입은 커리어우먼에게 어울리는 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9821.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('리스 41', 10, 325000, '플로럴계열', '우아한 화이트 플라워와 마다가스카 바닐라가 어우러진 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('리켄 데코스', 8, 190000, '그린계열', '파란 하늘 아래 솔솔 부는 바람을 맞은 무성한 잔디의 풀향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('릴 플레르', 5, 218000, '시트러스계열', '탠저린의 시스터스함과 샤프란의 포근함이 부드럽고 묵직하게 느껴지는 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('마라케시', 30, 129000, '허브계열', '마음이 안정되는 스파이시한 오리엔탈 아로마 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('매그놀리아 노빌레', 18, 95000, '프루티-플로럴계열', '베르가못, 레몬, 유자가 목련꽃과 상큼하게 어우러진 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9822.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('머드 앤 통카', 30, 182000, '시트러스계열', '아몬드와 바닐라의 포근한 향기가 아로마틱하게 느껴지는 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('멜로그라노', 16, 108000, '비누계열', '쨍하고 스파이시한 비누향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9823.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('모하비 고스트', 11, 210000, '플로럴계열', '베리의 달달함으로 시작해 바이올렛, 목련을 더한 오묘하고 몽확적인 새벽 감성의 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9824.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('목욕하는 여인', 15, 275000, '우디계열', '귀족 목욕탕의 수증기를 머금은 비누 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9825.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('몽파리', 21, 157000, '프루티계열', '스킨쉽을 부르는 베리향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9826.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('무스치오 오로', 21, 137000, '비누계열', '익숙하고 편안한 순정 비누향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9827.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('문라이트 인 헤븐', 10, 289000, '프루티계열', '스킨 토너를 바르고 망고코코넛에이드를 마시는 느낌');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('뮤스크 라바줴', 15, 246000, '머스크계열', '관능적이고 퇴폐적이며 스파이시한 머스크와 달지 않은 바닐라 잔향의 강렬한 존재감');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('미르토 디 파나레아', 5, 290000, '아쿠아계열', '에메랄드빛 지중해가 떠오르는 바다노트의 시원한 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9828.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('밀레지움 임페리얼', 1, 218000, '아쿠아계열', '바다의 향과 과일의 달콤한이 어우러진 워터리 계열의 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9829.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('바질 앤 네롤리', 4, 190000, '시트러스계열', '바질과 상큼한 네롤리가 자연스럽게 조화된 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('바카라 루쥬', 10, 558000, '허브계열', '관능적인 달달함과 비터 아몬드의 글래머러스한 조화');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('발다프리크', 5, 170000, '플로럴계열', '이국적인 우디함과 가지각색의 플로럴향이 잘 어울러져 은은하고 신비로운 느낌을 주면서 온화하게 마무리 되는 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9830.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('밤쉘', 18, 62000, '플로럴계열', '핑크톤의 달달함과 은은한 상큼함이 매력적인 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9831.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('뱀부 하모니', 4, 310000, '시트러스계열', '차분하고 싱그러운 차 향과 시트러스 향이 조화롭게 뿜어져 나오다 풀의 잔향이 은은하게 느껴지는 중성적인 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('버진 아일랜드 워터', 5, 278000, '프루티계열', '코코넛과 라임의 향기가 바람에 실려오는 느낌', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9832.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('베르가못 22', 4, 265000, '프루티계열', '생기 넘치는 베르가못과 자몽의 시원하고 청량한 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9833.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('베티 베리오', 3, 255000, '로즈-프루티계열', '장미와 자몽이 우아하게 조율된 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9834.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('벨벳 오키드', 10, 237000, '프루티-시트러스계열', '존재감 강한 바닐라와 시트러스 프루티 향조가 은은하게 섞인 관능적인 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('블랑쉬', 1, 260000, '우디계열', '가루세제를 물에 푼 것 같은 맑고 쨍한 비누향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('블랙 샤프란', 10, 216000, '프루티계열', '도회적 느낌이 전해지는 달달한 베리향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('블랙 오키드', 3, 172000, '스위트/구르망계열', '다크 초코렛같이 크리미하면서 퇴폐적이고 섹시한 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9835.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('블랙베리 앤 베이', 3, 137000, '프루티계열', '블랙베리 과즙의 생기 넘치는 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9836.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('블루 드', 1, 137000, '우디계열', '푸르스름한 퇴근길의 시원한 밤공기 같은 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('블루밍 부케', 2, 170000, '플로럴계열', '봄처럼 러블리하고 생기 넘치는 플로럴 부케향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9837.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('쁘띠 쉐리', 6, 242000, '프루티-머스크계열', '수분 가득 머금은 복숭아, 배, 멜론 과즙 사이로 포근하게 스며드는 머스크 잔향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('상탈 33', 4, 205000, '우디계열', '스모키한 우디향과 레더 잔향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9839.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('샹스 오 땅드르', 6, 146000, '플로럴계열', '바람에 살랑거리며 실려오는 꽃샴푸 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9840.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('솔레이 블랑', 5, 289000, '플로럴계열', '부드러운 코코넛 향에 은은한 일랑일랑 향이 들어간 여성들에게 어울리는 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('슈퍼 시더', 1, 216000, '우디계열', '버니지아 숲의 삼나무에서 큰 영감을 얻어만든 오래된 연필향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('스프링 플라워', 3, 304000, '프루티계열', '플로럴 부케향과 멜론, 복숭아 류의 물렁한 프루티계열 향조에서 느껴지는 생기에 봄처럼 기분이 맑아지는 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('실버 마운틴 워터', 6, 348000, '프루티계열', '산에서 솟아나는 깨끗한 샘물과 풍부한 과즙의 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9841.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('아 라 로즈', 3, 968000, '로즈계열', '연한 핑크빛 장미꽃의 가장 보드라운 꽃잎만 따서 만든 것 같은 청순가련한 장미향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('아란치아 디 카프리', 8, 100000, '프루티계열', '한여름 한가한 섬에서 맡는 향긋한 오렌지 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('아르테미지아', 4, 270000, '그린계열', '부드럽고 달콤한 잔향으로 스쳐지나가 하루종일 기억속에 맴도는 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('아이리스 39', 2, 294000, '플로럴계열', '비 온 뒤 햇볕 좋은 날 마른 흙이 잔뜩 묻은 아이리스꽃 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('아쿠아 유니버셜', 5, 212000, '시트러스계열', '푸른빛의 바다를 품은 바람에 향이 있다면 바로 이 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9842.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('아쿠아 키스', 6, 75000, '플로럴계열', '수분 가득 머금은 프리지아와 데이지의 맑고 시원한 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9843.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('알뤼르 옴므 스포츠', 9, 149000, '머스크계열', '투명하고 깨끗한 첫향과 화이트머스크 잔향이 어우러진 스포티 캐주얼 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9844.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('앰버 바닐라', 1, 98000, '플로럴계열', '알고 당하는 바닐라크림의 매력', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9845.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('어나더13', 6, 229000, '머스크계열', '차가움과 따뜻함이 공존하는 묘한 살냄새', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9846.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('어벤투스', 4, 335000, '프루티계열', '파인애플의 프루티한 탑노트가 매력적인 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9847.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('어벤투스 포 허', 2, 271000, '플로럴-프루티계열', '여성스러운 플로럴 프루티 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('어코드 우드', 2, 218000, '타바코-레더계열', '가죽과 오드의 진한 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('언네임드', 2, 318000, '그린계열', '부드러운 바이올렛과 이끼의 촉촉함이 매력적인 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('얼 그레이 앤 큐컴버', 4, 110000, '시트러스계열', '아늑하게 퍼지는 쌉쌀한 얼 그레이 한 잔의 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9848.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('엉빠썽', 4, 235000, '그린계열', '비 맞은 라일락, 또는 우연히 길을 걷다 바람 타고 코를 스치는 아카시아 꽃향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9849.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('에레미아', 5, 210000, '우디-허브-플로럴계열', '다양한 플로럴향기가 적절하게 가미된 우디 향과 허브 잔향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('엔젤 디 피렌체', 6, 104000, '비누계열', '연한 살구색이 떠오르는 은은한 과일향 비누', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9850.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('오데썽', 4, 135000, '시트러스계열', '오렌지 나무의 나뭇잎, 열매, 꽃, 껍질들을 다 담은 주스', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9851.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('오 듀엘르', 4, 255000, '플로럴계열', '나뭇가지 바싹 말린 건초 느낌과 파우더리한 바닐라가 어우러진 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9852.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('오 드 민떼', 3, 215800, '우디계열', '시원, 청량하면서 고급스러운 남자 스킨향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('오 로즈', 3, 188000, '로즈계열', '촉촉하고 맑은 장미 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('오 모헬리', 7, 154000, '플로럴계열', '산뜻하고 여성스러운 일랑일랑꽃 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('오에도', 7, 156000, '프루티계열', '감귤의 상큼함과 백리향을 거쳐 차분한 시더우드로 마무리 되는 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('오 카피탈', 7, 255000, '로즈계열', '말린 장미향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('오드 앤 베르가못', 10, 218000, '시트러스계열', '오드와 시트러스읭 깊고 균형 있는 첫 향이 매력적인 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('오드 우드', 5, 293000, '우디계열', '스모키하면서 묵직한 순정 우드의 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9853.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('오르페옹', 10, 269000, '플로럴계열', '우아하게 존재감을 드러내는 자스민과 파우더리 잔향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9855.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('오리지널 베티버', 7, 290000, '우디계열', '맑은 숲을 산책하는 느낌을 주는 베티버와 오렌지 껍질의 상쾌한 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('오리지널 머스크', 7, 87000, '머스크계열', '머스크의 신비하고 오묘한 향으로 샤워한 느낌');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('와일드 블루벨', 4, 104000, '플로럴계열', '수분감이 느껴지는 싱그러운 생화 향, 수박 흰 부분의 느낌');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('우드 세이지 앤 씨솔트', 5, 127000, '시트러스계열', '나무가 무성한 해안가의 상큼한 청량감', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9857.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('운 자르뎅', 3, 83000, '프루티계열', '싱그러운 아침, 정원에 앉아 유기농 과일과 야채를 갈아 넣은 주스를 마시는 것 같은 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('윈로즈', 11, 195000, '로즈계열', '보슬보슬 이슬비가 내리다가 갠 뒤에 장미밭에서 맡아지는 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('인레', 11, 240000, '애니멀릭계열', '버가못, 금목서가 펼쳐진 안개 낀 동양의 평화로운 호수가 느껴지는 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('인플로레센스', 5, 216000, '플로럴계열', '에어컨 빵빵 돌린 꽃집 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9858.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('일랑 49', 11, 384000, '플로럴계열', '신비롭고 오묘한 일랑일랑의 엣지가 파우더리와 함께 느껴지는 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('잉글리쉬 오크 앤 헤이즐넛', 1, 110000, '우디계열', '볶지 않은 자연 그대로의 은은한 헤이즐넛 향과 오크테이블로 가득착 카페에 들어선 느낌');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('잉글리쉬 페어 앤 프리지아', 12, 125000, '플로럴계열', '잘 익은 배의 신선함과 프리지아의 플로럴 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9859.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('자스민 17', 5, 418000, '플로럴계열', '독보적인 자스민향 뒤에 수줍게 나타나는 부드러운 밀크티의 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('재즈 클럽', 1, 145000, '우디계열', '위스키와 시가 연기 자욱한 재즈 클럽에서 날 것 같은 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('제라늄 앤 버베나', 15, 15000, '허브계열', '레몬 버베나의 은은한 향기와 그윽한 허브의 매니쉬한 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('집시 워터', 5, 149000, '푸제르계열', '바닐라레몬 묻은 솔잎 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9860.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('친칸타', 4, 123000, '시트러스-비누계열', '오이비누 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('코코 마드모아젤', 5, 179000, '플로럴계열', '그윽한 밤 성숙한 여인의 고혹적인 오리엔탈 파우더리 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9861.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('콜로니아 에센자', 4, 170000, '시트러스-비누계열', '시트러스로 시작해 우디한 비누 잔향으로 사라지는 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('타바코 바닐라', 2, 467000, '우디계열', '따뜻한 시가 향에 피어오르는 달콤한 바닐라 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('탐다오', 3, 120000, '우디계열', '신비롭고 몽환적인 나무 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9862.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('테싯', 10, 150000, '그린계열', '비 온 뒤 이끼 가득한 숲의 공기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9863.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('트윌리 데르메스', 4, 87000, '오리엔탈계열', '묘한 분위기의 성숙하고 글래머러스한 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('펄프', 5, 400000, '프루티계열', '숙성되고 달콤한 과일에 무화과 과즙을 첨가한 드라마틱한 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('페루 헬리오트로프', 7, 190000, '머스크계열', '달달포근하면서 밀키한 느낌의 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('페뷸러스', 1, 364000, '플로럴계열', '레더와 라벤더가 묘하게 조합된 성숙한 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('포트레이트 오브 어 레이디', 10, 503000, '로즈계열', '느와르한 스파이시 오리엔탈 로즈향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('포피 앤 바알리', 12, 110000, '우디-플로럴계열', '진한 양귀비꽃향과 곡물의 톤이 깊게 느껴지는 우디 잔향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('프리지아', 10, 132000, '플로럴계열', '프리지아를 품은 비누향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9864.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('플라워 오브 이모탈리티', 3, 285000, '프루티계열', '귀여우면서 차분한 복숭아향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('플러리시모', 5, 369000, '플로럴-비누계열', '여리여리한 비누향이 감도는 우아한 클래식 플로럴 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('플레르 드', 5, 240000, '머스크계열', '자연스러운 살냄새', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9865.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('피오니 앤 블러쉬 스웨이드', 4, 115000, '프루티계열', '피오니와 레드 애플이 섞인 진하고 매혹적인 향', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9866.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('피코 디 아말피', 3, 75000, '프루티계열', '버가못으로 시작해 무화과 과육향이 가볍게 머물다 가는 시원상큼함이 남는 향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('필로시코스', 4, 255000, '프루티계열', '무화과와 코코넛의 치명적인 앙상블', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9867.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('화이트 스웨이드', 6, 289000, '머스크계열', '뭉게구름 낀 겨울 보드라운 스웨터를 입은 포근함', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9868.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('휠', 8, 155000, '그린계열', '비 온 뒤 숲속의 젖은 땅에서 올라오는 흙내음', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9869.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('히노끼', 3, 97000, '우디계열', '히노끼 생나무를 갈아 만든 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('허니 서클 앤 다바나', 7, 110000, '스위트/구르망계열', '비에 적은 촉촉한 덤불을 꿀 향으로 물들인 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('비터피치', 3, 403000, '프루티계열', '피치 크러시 칵테일이 떠오르는 섹시한 복숭아 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('묘미', 13, 18000, '머스크계열', '일랑일랑의 꽃향이 사랑스럽고 은은하게 퍼지는 포근한 향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('1657', 9, 320000, '비누계열', '세련되고 우아한 비누향기');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('로즈 느와', 10, 260000, '로즈계열', '흙 속에 묻혀 있던 관능적인 장미향');
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info, perf_img) VALUES ('블룸', 8, 93000, '플로럴계열', '튜베로즈와 화이트 플라워가 가득한 정원의 고귀한 향기', "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9838.jpg");
+INSERT INTO tb_perfume (perf_name, perf_cnt, perf_price, perf_affiliation, perf_info) VALUES ('001 우먼', 10, 125000, '우디-머스크계열', '우디와 머스크의 심플하고 품격 있는 조화');
+
+
+-- 판매자 데이터
+INSERT INTO tb_distributor (d_name, d_tel, d_addr, d_owner) VALUES ('올리브영 강남파이낸스점', '02-508-5390', '서울특별시 역삼동 테헤란로 152 지하2층', '구원');
+INSERT INTO tb_distributor (d_name, d_tel, d_addr, d_owner) VALUES ('올리브영 홍대 타운', '02-3144-3963', '서울특별시 마포구 동교동 양화로 156 엘지 팰리스', '천사랑');
+INSERT INTO tb_distributor (d_name, d_tel, d_addr, d_owner) VALUES ('올리브영 서면1번가점', '051-802-5756', '부산광역시 부산진구 신천대로62번길 77', '오평화');
+INSERT INTO tb_distributor (d_name, d_tel, d_addr, d_owner) VALUES ('씨제이올리브영 충장로3가점', '062-227-2230', '광주광역시 동구 충장로 80-16', '강다을');
+INSERT INTO tb_distributor (d_name, d_tel, d_addr, d_owner) VALUES ('올리브영 울산업스퀘어점', '052-990-5290', '울산광역시 남구 화합로 185', '노상식');
+INSERT INTO tb_distributor (d_name, d_tel, d_addr, d_owner) VALUES ('올리브영 강전주 타운', '063-282-5290', '전라북도 전주시 완산구 중앙동 전주객사5길 21-19', '이로운');
+INSERT INTO tb_distributor (d_name, d_tel, d_addr, d_owner) VALUES ('CJ올리브영 경주점', '054-773-7716', '경상북도 경주시 노동동 계림로 103', '구일훈');
+INSERT INTO tb_distributor (d_name, d_tel, d_addr, d_owner) VALUES ('올리브영 강대전둔산로점', '042-486-5290', '대전광역시 서구 대덕대로233번길 36', '구화란');
+INSERT INTO tb_distributor (d_name, d_tel, d_addr, d_owner) VALUES ('올리브영 수원 타운', '031-233-5290', '경기도 수원시 팔달구 권광로 169', '전민서');
+INSERT INTO tb_distributor (d_name, d_tel, d_addr, d_owner) VALUES ('올리브영 제주시청점', '064-759-5290', '제주특별자치도 제주시 이도이동 1179-23', '두리');
+
+
+-- 고객 데이터
+INSERT INTO tb_user (user_id, user_pw, user_name, user_birthday, user_gender, user_tel) VALUES ('sin', '12345', '김서윤', '2023-08-04', '여', '010-1234-5678');
+INSERT INTO tb_user (user_id, user_pw, user_name, user_birthday, user_gender, user_tel) VALUES ('soo', 'abcde', '윤기수', '2021-12-25', '여', '010-8975-2588');
+INSERT INTO tb_user (user_id, user_pw, user_name, user_birthday, user_gender, user_tel) VALUES ('shj', '12abc', '서기정', '1995-03-29', '여', '010-1325-5478');
+INSERT INTO tb_user (user_id, user_pw, user_name, user_birthday, user_gender, user_tel) VALUES ('naa', 'abc45', '박정수수', '1999-01-17', '남', '010-5462-0038');
+
+
+-- 피드백 데이터
+INSERT INTO tb_feedback (title, content, created_at, user_id, feedback_views, feedback_likes, perf_idx) 
+VALUES ('향이 만족스러워요!', '너무 진한 향은 싫어했는데 추천해준 향은 은은하니 좋았어요! 재미있는 체험이랑 같이 하니 더 좋았던거 같습니다!', '2023-08-04', 'naa', 150, 73, 90);
+
+
+-- 매니저 데이터
+INSERT INTO tb_manager (mgr_name, d_idx, mgr_tel) VALUES ('강호동', 1, '010-7895-1321');
+INSERT INTO tb_manager (mgr_name, d_idx, mgr_tel) VALUES ('표지훈', 2, '010-1685-7232');
+INSERT INTO tb_manager (mgr_name, d_idx, mgr_tel) VALUES ('송민호', 8, '010-9870-5651');
+INSERT INTO tb_manager (mgr_name, d_idx, mgr_tel) VALUES ('은지원', 5, '010-0898-0684');
+
+
+-- 1번 매장 보유 상품 데이터
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (2, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%981.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (3, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%982.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (4, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%983.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (5, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%984.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (8, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%985.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (9, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%986.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (10, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%987.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (12, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%988.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (13, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%989.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (15, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9810.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (17, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9811.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (18, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9812.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (21, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9813.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (20, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%981.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (22, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9815.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (24, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9816.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (25, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9817.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (27, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9818.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (28, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9819.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (36, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9820.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (37, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9821.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (42, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9822.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (44, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9823.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (45, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9824.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (46, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9825.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (47, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9826.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (48, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9827.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (51, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9828.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (52, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9829.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (55, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9830.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (56, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9831.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (58, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9832.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (59, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9833.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (60, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9834.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (64, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9835.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (65, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9836.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (67, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9837.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (144, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9838.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (69, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9839.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (70, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9840.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (74, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9841.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (79, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9842.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (80, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9843.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (81, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9844.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (82, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9845.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (83, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9846.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (84, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9847.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (88, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9848.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (89, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9849.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (91, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9850.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (92, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9851.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (93, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9852.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (100, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9853.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (101, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9855.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (105, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9857.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (109, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9858.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (112, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9859.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (116, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9860.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (118, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9861.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (121, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9862.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (122, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9863.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (129, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9864.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (132, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9865.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (133, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9866.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (135, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9867.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (136, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9868.jpg");
+INSERT INTO tb_goods (perf_idx, d_idx, goods_img) VALUES (137, 1, "https://s3.ap-northeast-2.amazonaws.com/perfume.projact/perfume_projact/%ED%96%A5%EC%88%9869.jpg");
+
+
+-- 현재 향수 상태
+-- 위치순번(AI) 향수고유번호(null 허용) 향수 상태(0또는1)
+-- INSERT INTO tb_perfume_state () VALUES ();
+
+select perf_name, perf_idx from tb_perfume where perf_name = '로디베';
+
+-- 향수고유번호, 향수상태(있는지없는지), 매장순번
+INSERT INTO tb_perfume_state (perf_idx, perf_state, d_idx) VALUES (102, 1, 1);
+INSERT INTO tb_perfume_state (perf_idx, perf_state, d_idx) VALUES (140, 1, 1);
+INSERT INTO tb_perfume_state (perf_idx, perf_state, d_idx) VALUES (128, 1, 1);
+INSERT INTO tb_perfume_state (perf_idx, perf_state, d_idx) VALUES (101, 1, 1);
+INSERT INTO tb_perfume_state (perf_idx, perf_state, d_idx) VALUES (135, 1, 1);
+INSERT INTO tb_perfume_state (perf_idx, perf_state, d_idx) VALUES (24, 1, 1);
+INSERT INTO tb_perfume_state (perf_idx, perf_state, d_idx) VALUES (106, 1, 1); -- 테스트용
+INSERT INTO tb_perfume_state (perf_idx, perf_state, d_idx) VALUES (26, 1, 1);
+
+select * from tb_perfume_state;
