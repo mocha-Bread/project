@@ -10,7 +10,7 @@
 <H3>테스트.py</H3>
 
 > 파일내에 openai api key 입력필요 <br>
-> mysql 사용시 만들어둔 sql문 실행 필요
+> mysql 사용시 만들어둔 sql문 실행 필요 <br>
 > db 정보도 파일내에 입력필요
 
 <H3>주의사항</H3>
