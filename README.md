@@ -1,3 +1,5 @@
-# project
-사용자의 데이터를 입력받고 향수 추천 / 자동 분사
+# Perfume recommendation and automatic spraying
 
+<h1>실행방법</h1>
+> 
+> 
