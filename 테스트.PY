@@ -4,10 +4,10 @@ import difflib
 import openai
 import random
 
-DB_HOST = 'localhost'
-DB_USER = 'root'
-DB_PASSWORD = '1234'
-DB_NAME = 'hekate'
+DB_HOST = ''
+DB_USER = ''
+DB_PASSWORD = ''
+DB_NAME = ''
 
 conn = pymysql.connect(
     host=DB_HOST,
